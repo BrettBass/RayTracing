@@ -2,8 +2,8 @@
 #include "Walnut/EntryPoint.h"
 
 #include "Walnut/Image.h"
-#include "Walnut/Random.h"
 #include "Walnut/Timer.h"
+#include "Renderer.h"
 
 using namespace Walnut;
 
@@ -24,38 +24,56 @@ public:
 		m_ViewportWidth = ImGui::GetContentRegionAvail().x;
 		m_ViewportHeight = ImGui::GetContentRegionAvail().y;
 
-		if(m_Image)
-			ImGui::Image(m_Image->GetDescriptorSet(), { (float)m_Image->GetWidth(), (float)m_Image->GetHeight() });
+		auto image = m_renderer.GetFinalImage();
+		if(image)
+			ImGui::Image(image->GetDescriptorSet(), { (float)image->GetWidth(), (float)image->GetHeight()}, ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::End();
 		ImGui::PopStyleVar();
 
-		// Render(); //"real time" renderer
+		Render(); //"real time" renderer
 	}
 
 	void Render() {
 		Timer timer;
 
-		if (!m_Image || m_ViewportWidth != m_Image->GetWidth() || m_ViewportHeight != m_Image->GetHeight()) {
-			m_Image = std::make_shared<Image>(m_ViewportWidth, m_ViewportHeight, ImageFormat::RGBA);
-			delete[] m_ImageData;
-			m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
-		}
-
-		for (uint32_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++) {
-			m_ImageData[i] = Random::UInt();
-			m_ImageData[i] |= 0xff000000;
-		}
-
-		m_Image->SetData(m_ImageData);
+		m_renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
+		m_renderer.Render();
 
 		m_LastRenderTime = timer.ElapsedMillis();
 	}
+
+
+
+
+
+	int descriminant(uint32_t i, uint32_t j, uint32_t k) {
+
+	}
+
+	std::vector<uint32_t> intersection(uint32_t i, uint32_t j, uint32_t k) {
+
+	}
+
+	void sphere() { // do later, (add z component)
+		if (descriminant(1, 2, 3) >= 0) { 
+			points.insert(points.end(), intersection(1, 2, 3).begin(), intersection(1, 2, 3).end());
+		}
+		else {
+			points.insert(points.end(), 0);
+		}
+	}
+
+	void RayPath() {
+
+	}
+
 private:
-	std::shared_ptr<Image> m_Image;
-	uint32_t* m_ImageData = nullptr;
 	uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 	float m_LastRenderTime = 0.0f;
+	Renderer m_renderer;
+
+	std::vector<uint32_t> points;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
