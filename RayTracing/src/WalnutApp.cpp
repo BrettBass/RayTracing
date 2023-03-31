@@ -43,31 +43,6 @@ public:
 		m_LastRenderTime = timer.ElapsedMillis();
 	}
 
-
-
-
-
-	int descriminant(uint32_t i, uint32_t j, uint32_t k) {
-
-	}
-
-	std::vector<uint32_t> intersection(uint32_t i, uint32_t j, uint32_t k) {
-
-	}
-
-	void sphere() { // do later, (add z component)
-		if (descriminant(1, 2, 3) >= 0) { 
-			points.insert(points.end(), intersection(1, 2, 3).begin(), intersection(1, 2, 3).end());
-		}
-		else {
-			points.insert(points.end(), 0);
-		}
-	}
-
-	void RayPath() {
-
-	}
-
 private:
 	uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 	float m_LastRenderTime = 0.0f;
